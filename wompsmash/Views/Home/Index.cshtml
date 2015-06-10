@@ -1,0 +1,36 @@
+﻿@model List<wompsmash.Models.BlogPost>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<p>
+    Hi, my name is Jeremy Bennett, welcome to my personal website. This site is built with ASP.NET MVC 5, C# with a MySQL Database. Front end is built with HMTL5, CSS3 and Jquery.
+    <div>
+        <table>
+            @{
+                foreach(var blogPost in Model)
+                {
+                    <tr>
+                        <td>
+                            Author: @blogPost.AuthorName
+                        </td>
+                        <td>
+                            Title: @blogPost.Title
+                        </td>
+                        <td>
+                            Description: @blogPost.Description
+                        </td>
+                        <td>
+                            Publish Date: @blogPost.PublishDate.ToShortDateString()
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div>
+        @Html.ActionLink("Add New Blog", "AddPost")
+    </div>
+
+</p>

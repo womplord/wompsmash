@@ -1,0 +1,27 @@
+﻿@model wompsmash.Models.BlogPost
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddBlog</title>
+</head>
+<body>
+    <div> 
+        @using (Html.BeginForm())
+        {
+            <p>Author name: @Html.TextBoxFor(m=>Model.AuthorName)</p>
+            <p>Title: @Html.TextBoxFor(m => Model.Title)</p>
+            <p>Description: @Html.TextBoxFor(m=>Model.Description)</p>
+            <p>Publish Date: @Html.TextBoxFor(m=>Model.PublishDate)</p>
+            
+            <input type="submit" name="AddBook" />
+        }
+    </div>
+</body>
+</html>
