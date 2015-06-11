@@ -5,10 +5,11 @@ using System.Web;
 
 namespace wompsmash.Models
 {
-    public class BlogPost
+    public class Author
     {
         public int ID { get; set; }
-        public string Description { get; set; }
-        public Author Author { get; set; }
+        public string LastName { get; set; }
+        public string FirstName { get; set; }
+        public string Email { get; set; }
     }
 }
