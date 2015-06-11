@@ -10,7 +10,7 @@ namespace wompsmash.Models
         public int ID { get; set; }
         public string Title { get; set; }
         public DateTime Date { get; set; }
-        public Uri Location { get; set; }
-        public virtual ICollection<Author> Authors { get; set; }
+        public string Location { get; set; }
+        public int AuthorID { get; set; }
     }
 }
