@@ -23,9 +23,27 @@
     padding-left: 15px;
     padding-right: 15px;
     width:1200px;
+    display:flex;
+
 
 }
 
+.footer{
+    background-color:white;
+    border-top:1px solid black;
+    width:1200px;
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.side-nav {
+    width: 150px;
+    padding-right: 15px;
+}
+
+.page-content{
+    width: 500px;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,

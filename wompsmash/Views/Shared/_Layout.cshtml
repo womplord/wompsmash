@@ -9,16 +9,28 @@
 </head>
 <body>
     <div class="header">
-        ayy lmao
+        Womp Smash
     </div>
     <div class="container body-content">
-        @RenderBody()
-        <hr />
+        <div class="side-nav">
+            <ul>
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Authors", "Index", "Author")</li>
+                <li>@Html.ActionLink("Blog Posts", "Index", "BlogPost")</li>
+                <li>@Html.ActionLink("Projects", "Index", "Project")</li>
+            </ul>
+        </div>
+        <div class="page-content">
+            @RenderBody()
+        </div>
+
+    </div>
+    <div class="footer">
         <footer>
             <p>&copy; @DateTime.Now.Year - WompSmash</p>
         </footer>
     </div>
-
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 </body>
