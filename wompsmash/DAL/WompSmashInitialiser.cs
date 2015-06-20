@@ -8,12 +8,14 @@ namespace wompsmash.DAL
 {
     public class WompSmashInitialiser : System.Data.Entity.DropCreateDatabaseIfModelChanges<WompSmashContext>
     {
+        
         protected override void Seed(WompSmashContext context)
         {
+            
             var authors = new List<Author>
             {
-                new Author{LastName="Bennett", FirstName="Jeremy", Email="jeremy186@hotmail.com"},
-                new Author{LastName="Walker", FirstName="Johnny", Email="johnny@johnny.com"}
+                new Author{LastName="Bennett", FirstName="Jeremy", Email="jeremy186@hotmail.com", DateAdded=DateTime.Now},
+                new Author{LastName="Walker", FirstName="Johnny", Email="johnny@johnny.com", DateAdded=DateTime.Now}
 
             };
 
@@ -23,7 +25,7 @@ namespace wompsmash.DAL
             var projects = new List<Project>
             {
                 new Project{Title="WompSmash", Date=DateTime.Parse("2015-06-11"), Location="WompSmash", AuthorID=1},
-                new Project{Title="Graph Data Structure", Date=DateTime.Parse("2014-05-0"), Location="GraphDataStructure", AuthorID=1}
+                new Project{Title="Graph Data Structure", Date=DateTime.Parse("2014-05-05"), Location="GraphDataStructure", AuthorID=1}
             };
 
             projects.ForEach(s => context.Project.Add(s));
@@ -38,5 +40,6 @@ namespace wompsmash.DAL
             blogPosts.ForEach(s=> context.BlogPost.Add(s));
             context.SaveChanges();
         }
+        
     }
 }

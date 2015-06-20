@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using wompsmash.DAL;
 using wompsmash.Models;
+using PagedList;
 
 namespace wompsmash.Controllers
 {
@@ -16,9 +17,62 @@ namespace wompsmash.Controllers
         private WompSmashContext db = new WompSmashContext();
 
         // GET: Author
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(db.Author.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.LastNameSortParm = String.IsNullOrEmpty(sortOrder) ? "last_name_desc" : "";
+            ViewBag.FirstNameSortParm = sortOrder == "first_name" ? "first_name_desc" : "first_name";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.EmailSortParm = sortOrder == "Email" ? "email_desc" : "Email";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var authors = from s in db.Author
+                           select s;
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                authors = authors.Where(s => s.LastName.Contains(searchString) ||
+                    s.FirstName.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "last_name_desc":
+                    authors = authors.OrderByDescending(s => s.LastName);
+                    break;
+                case "first_name":
+                    authors = authors.OrderBy(s => s.FirstName);
+                    break;
+                case "first_name_desc":
+                    authors = authors.OrderByDescending(s => s.FirstName);
+                    break;
+                case "Date":
+                    authors = authors.OrderBy(s => s.DateAdded);
+                    break;
+                case "date_desc":
+                    authors = authors.OrderByDescending(s => s.DateAdded);
+                    break;
+                case "Email":
+                    authors = authors.OrderBy(s => s.Email);
+                    break;
+                case "email_desc":
+                    authors = authors.OrderByDescending (s=>s.Email);
+                    break;
+                default:
+                    authors = authors.OrderBy(s => s.LastName);
+                    break;
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(authors.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Author/Details/5
@@ -47,13 +101,21 @@ namespace wompsmash.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,LastName,FirstName,Email")] Author author)
+        public ActionResult Create([Bind(Include = "LastName,FirstName,Email")] Author author)
         {
-            if (ModelState.IsValid)
+            // try
+            author.DateAdded = DateTime.Now;
             {
-                db.Author.Add(author);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Author.Add(author);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            //catch(DataException)
+            {
+            //    ModelState.AddModelError("", "Unable to save changes.");
             }
 
             return View(author);
@@ -77,25 +139,43 @@ namespace wompsmash.Controllers
         // POST: Author/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,LastName,FirstName,Email")] Author author)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(author).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(author);
-        }
-
-        // GET: Author/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult EditPost(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var authorToUpdate = db.Author.Find(id);
+
+            if (TryUpdateModel(authorToUpdate, "",
+                new string[] {"LastName", "FirstMidName", "EnrollmentDate" }))
+            {
+                try
+                {
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+
+                }
+                catch(DataException)
+                {
+                    ModelState.AddModelError("", "Unable to save changes");
+                }
+            }
+            return View(authorToUpdate);
+        }
+
+        // GET: Author/Delete/5
+        public ActionResult Delete(int? id, bool? saveChangesError=false)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if(saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed";
             }
             Author author = db.Author.Find(id);
             if (author == null)
@@ -106,13 +186,20 @@ namespace wompsmash.Controllers
         }
 
         // POST: Author/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
-            Author author = db.Author.Find(id);
-            db.Author.Remove(author);
-            db.SaveChanges();
+            try
+            {
+                Author author = db.Author.Find(id);
+                db.Author.Remove(author);
+                db.SaveChanges();
+            }
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
             return RedirectToAction("Index");
         }
 

@@ -8,7 +8,7 @@ namespace wompsmash.DAL
     {
         public WompSmashContext() : base("WompSmashContext")
         {
-
+            //Database.SetInitializer<WompSmashContext>(null);
         }
 
         public DbSet<Author> Author { get; set; }
