@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using wompsmash.DAL;
 using wompsmash.Models;
 using PagedList;
+using System.Data.Entity.Infrastructure;
 
 namespace wompsmash.Controllers
 {
@@ -17,7 +18,7 @@ namespace wompsmash.Controllers
         private WompSmashContext db = new WompSmashContext();
 
         // GET: Author
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.LastNameSortParm = String.IsNullOrEmpty(sortOrder) ? "last_name_desc" : "";
@@ -103,8 +104,8 @@ namespace wompsmash.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "LastName,FirstName,Email")] Author author)
         {
-            // try
-            author.DateAdded = DateTime.Now;
+            author.DateAdded = DateTime.Now.Date;
+            try
             {
                 if (ModelState.IsValid)
                 {
@@ -113,9 +114,9 @@ namespace wompsmash.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            //catch(DataException)
+            catch(RetryLimitExceededException)
             {
-            //    ModelState.AddModelError("", "Unable to save changes.");
+                ModelState.AddModelError("", "Unable to save changes.");
             }
 
             return View(author);
@@ -158,7 +159,7 @@ namespace wompsmash.Controllers
                     return RedirectToAction("Index");
 
                 }
-                catch(DataException)
+                catch(RetryLimitExceededException)
                 {
                     ModelState.AddModelError("", "Unable to save changes");
                 }
@@ -196,7 +197,7 @@ namespace wompsmash.Controllers
                 db.Author.Remove(author);
                 db.SaveChanges();
             }
-            catch (DataException)
+            catch (RetryLimitExceededException)
             {
                 return RedirectToAction("Delete", new { id = id, saveChangesError = true });
             }

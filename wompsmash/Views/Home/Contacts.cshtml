@@ -1,0 +1,32 @@
+﻿@model IEnumerable<wompsmash.Models.Contact>
+@{
+    ViewBag.Title = "Home";
+}
+@section Scripts {
+    <script type="text/javascript">
+        function ContactsViewModel() {
+            var self = this;
+            self.contacts = ko.observableArray([]);
+
+            $.getJSON("/api/contacts", function (data) {
+                self.contacts(data);
+            });
+        }
+        ko.applyBindings(new ContactsViewModel());
+    </script>
+
+
+}
+@using (Html.BeginForm())
+{
+<ul id="contacts" data-bind="foreach: contacts">
+    <li>
+        <h1 data-bind="text: Name"></h1>
+        <p data-bind="text: Email"></p>
+        <input type="text" data-bind="value: Name" />
+    </li>
+</ul>
+    
+<input type="submit" />
+}
+@Html.ActionLink("Do stuff", "stuff", "Home");

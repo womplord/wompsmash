@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace wompsmash.Models
 {
-    public class Author
+    public class Author : Person
     {
-        public int ID { get; set; }
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
+
+        [Required]
+        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateAdded { get; set; }
+
+
     }
 }

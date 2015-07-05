@@ -11,7 +11,7 @@ namespace wompsmash.DAL
         
         protected override void Seed(WompSmashContext context)
         {
-            
+            /*
             var authors = new List<Author>
             {
                 new Author{LastName="Bennett", FirstName="Jeremy", Email="jeremy186@hotmail.com", DateAdded=DateTime.Now},
@@ -38,7 +38,7 @@ namespace wompsmash.DAL
             };
 
             blogPosts.ForEach(s=> context.BlogPost.Add(s));
-            context.SaveChanges();
+            context.SaveChanges();*/
         }
         
     }

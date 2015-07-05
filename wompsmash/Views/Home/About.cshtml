@@ -1,0 +1,30 @@
+﻿@model IEnumerable<wompsmash.ViewModels.AuthorDateGroup>
+
+@{
+    ViewBag.Title = "Author Statistics";
+}
+
+<h2>Student Body Statistics</h2>
+
+<table>
+    <tr>
+        <th>
+            Enrollment Date
+        </th>
+        <th>
+            Students
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAdded)
+            </td>
+            <td>
+                @item.AuthorCount
+            </td>
+        </tr>
+    }
+</table>
