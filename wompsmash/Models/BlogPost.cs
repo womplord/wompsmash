@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace wompsmash.Models
 {
@@ -18,6 +19,9 @@ namespace wompsmash.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PublishDate { get; set; }
+
+        [AllowHtml]
+        public string Content { get; set; }
 
         [ForeignKey("Author")]
         public int AuthorID { get; set; }

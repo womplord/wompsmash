@@ -49,7 +49,7 @@ namespace wompsmash.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,PublishDate,AuthorID")] BlogPost blogPost)
+        public ActionResult Create([Bind(Include = "ID,Title,PublishDate,AuthorID,Content")] BlogPost blogPost)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace wompsmash.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,PublishDate,AuthorID")] BlogPost blogPost)
+        public ActionResult Edit([Bind(Include = "ID,Title,PublishDate,AuthorID,Content")] BlogPost blogPost)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace wompsmash.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.AuthorID = new SelectList(db.Author, "ID", "LastName", blogPost.AuthorID);
+            ViewBag.AuthorID = new SelectList(db.Author, "ID", "LastName","Content", blogPost.AuthorID);
             return View(blogPost);
         }
 
