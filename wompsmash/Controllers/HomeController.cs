@@ -32,16 +32,6 @@ namespace wompsmash.Controllers
             return View(data.ToList());
         }
 
-        public ActionResult Contacts()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Contacts([Bind(Include = "ContactID")] Contact contact)
-        {
-            return View();
-        }
 
         public void stuff()
         {
